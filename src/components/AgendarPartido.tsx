@@ -12,9 +12,11 @@ type Sport = 'soccer' | 'calisthenics' | 'running' | 'custom';
 interface AgendarPartidoProps {
     open: boolean;
     onClose: () => void;
+    initialSport?: 'soccer' | 'calisthenics' | 'running' | 'custom' | null;
+    initialSportName?: string;
 }
 
-export function AgendarPartido({ open, onClose }: AgendarPartidoProps) {
+export function AgendarPartido({ open, onClose, initialSport, initialSportName }: AgendarPartidoProps) {
     const [step, setStep] = useState<Step>('sport');
     const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
     const [customSportName, setCustomSportName] = useState('');
@@ -36,11 +38,21 @@ export function AgendarPartido({ open, onClose }: AgendarPartidoProps) {
     // Reset on open
     useEffect(() => {
         if (open) {
-            setStep('sport');
-            setSelectedSport(null);
+            if (initialSport) {
+                // Skip sport selection — go directly to create
+                setStep('create');
+                setSelectedSport(initialSport);
+                setMatchMode('create');
+                if (initialSport === 'custom' && initialSportName) {
+                    setCustomSportName(initialSportName);
+                }
+            } else {
+                setStep('sport');
+                setSelectedSport(null);
+                setMatchMode(null);
+            }
             setCustomSportName('');
             setShowCustomInput(false);
-            setMatchMode(null);
             setPosition('');
             setSkillLevel('');
             setSearchProgress(0);
@@ -48,7 +60,7 @@ export function AgendarPartido({ open, onClose }: AgendarPartidoProps) {
             setVideoUploaded(false);
             setWatchConnected(false);
         }
-    }, [open]);
+    }, [open, initialSport]);
 
     // Simulated matchmaking search
     useEffect(() => {

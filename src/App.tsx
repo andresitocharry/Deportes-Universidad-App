@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Home } from './components/Home';
 import { RetosComunidad } from './components/RetosComunidad';
-import { MapaUbicaciones } from './components/MapaUbicaciones';
+import { Play } from './components/Play';
 import { Comunidades } from './components/Comunidades';
 import { Profesores } from './components/Profesores';
 import { Clima } from './components/Clima';
 import { ConexionStrava } from './components/ConexionStrava';
 import { HistorialPartidos } from './components/HistorialPartidos';
-import { House, Trophy, MapTrifold, UsersThree, Student, Plus } from '@phosphor-icons/react';
+import { House, Trophy, GameController, UsersThree, Student, Plus } from '@phosphor-icons/react';
 
-type Screen = 'home' | 'retos' | 'mapa' | 'clima' | 'comunidades' | 'strava' | 'historial' | 'profesores';
+type Screen = 'home' | 'retos' | 'play' | 'clima' | 'comunidades' | 'strava' | 'historial' | 'profesores';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
@@ -26,8 +26,8 @@ export default function App() {
         return <Home onNavigate={navigate} fabTrigger={fabTrigger} />;
       case 'retos':
         return <RetosComunidad onNavigate={navigate} fabTrigger={fabTrigger} />;
-      case 'mapa':
-        return <MapaUbicaciones onNavigate={navigate} fabTrigger={fabTrigger} />;
+      case 'play':
+        return <Play onNavigate={navigate} fabTrigger={fabTrigger} />;
       case 'comunidades':
         return <Comunidades onNavigate={navigate} fabTrigger={fabTrigger} />;
       case 'profesores':
@@ -65,7 +65,21 @@ export default function App() {
           <div className="flex justify-around items-center">
             <NavButton active={currentScreen === 'home'} onClick={() => navigate('home')} icon={House} label="Home" />
             <NavButton active={currentScreen === 'retos'} onClick={() => navigate('retos')} icon={Trophy} label="Retos" />
-            <NavButton active={currentScreen === 'mapa'} onClick={() => navigate('mapa')} icon={MapTrifold} label="Mapa" />
+            {/* Play — Highlighted as primary feature */}
+            <button
+              onClick={() => navigate('play')}
+              className={`flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition-all duration-200 min-w-[60px] -mt-3 ${currentScreen === 'play' ? 'scale-105' : ''
+                }`}
+            >
+              <div className={`p-2.5 rounded-2xl transition-all duration-200 shadow-lg ${currentScreen === 'play'
+                  ? 'bg-tertiary shadow-tertiary/40 scale-110'
+                  : 'bg-tertiary/90 shadow-tertiary/30 hover:bg-tertiary'
+                }`}>
+                <GameController size={26} weight="fill" className="text-white" />
+              </div>
+              <span className={`text-[10px] tracking-wide font-bold ${currentScreen === 'play' ? 'text-tertiary' : 'text-tertiary/70'
+                }`}>Play</span>
+            </button>
             <NavButton active={currentScreen === 'comunidades'} onClick={() => navigate('comunidades')} icon={UsersThree} label="Social" />
             <NavButton active={currentScreen === 'profesores'} onClick={() => navigate('profesores')} icon={Student} label="Profes" />
           </div>
