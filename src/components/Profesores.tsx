@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Star, ChatCircle, Phone, CaretRight, Medal, CalendarBlank, X } from '@phosphor-icons/react';
+import { Star, ChatCircle, Phone, CaretRight, Medal, CalendarBlank, X, SealCheck, Trophy, TrendUp } from '@phosphor-icons/react';
 
 interface Profesor {
   id: number;
@@ -12,6 +12,11 @@ interface Profesor {
   whatsapp: string;
   disponibilidad: string;
   especialidad: string;
+  verified: boolean;
+  sessionsDelivered: number;
+  tournamentWins: number;
+  rankInSport: number;
+  totalCoachesInSport: number;
 }
 
 interface Review {
@@ -38,11 +43,11 @@ export function Profesores({ onNavigate, fabTrigger }: ProfesoresProps) {
   }, [fabTrigger]);
 
   const profesores: Profesor[] = [
-    { id: 1, nombre: 'Carlos Mendez', deporte: 'Soccer', rating: 4.8, totalReviews: 24, precio: '$30/hour', experiencia: '8 years', whatsapp: '+57 300 1234567', disponibilidad: 'Mon-Fri 4-8 PM', especialidad: 'Technical skills & tactics' },
-    { id: 2, nombre: 'Ana Rodriguez', deporte: 'Tennis', rating: 4.9, totalReviews: 31, precio: '$35/hour', experiencia: '10 years', whatsapp: '+57 310 7654321', disponibilidad: 'Tue-Sat 9 AM-6 PM', especialidad: 'Singles & doubles strategy' },
-    { id: 3, nombre: 'Miguel Torres', deporte: 'Basketball', rating: 4.7, totalReviews: 18, precio: '$28/hour', experiencia: '6 years', whatsapp: '+57 315 9876543', disponibilidad: 'Mon-Wed 5-9 PM', especialidad: 'Shooting & defense' },
-    { id: 4, nombre: 'Laura Gomez', deporte: 'Swimming', rating: 5.0, totalReviews: 12, precio: '$40/hour', experiencia: '12 years', whatsapp: '+57 320 4561237', disponibilidad: 'Daily 6-10 AM', especialidad: 'All strokes & endurance' },
-    { id: 5, nombre: 'David Silva', deporte: 'Running', rating: 4.6, totalReviews: 15, precio: '$25/hour', experiencia: '5 years', whatsapp: '+57 318 7894561', disponibilidad: 'Mon-Sat 6-9 AM', especialidad: 'Marathon training' },
+    { id: 1, nombre: 'Carlos Mendez', deporte: 'Soccer', rating: 4.8, totalReviews: 24, precio: '$30/hour', experiencia: '8 years', whatsapp: '+57 300 1234567', disponibilidad: 'Mon-Fri 4-8 PM', especialidad: 'Technical skills & tactics', verified: true, sessionsDelivered: 142, tournamentWins: 5, rankInSport: 1, totalCoachesInSport: 8 },
+    { id: 2, nombre: 'Ana Rodriguez', deporte: 'Tennis', rating: 4.9, totalReviews: 31, precio: '$35/hour', experiencia: '10 years', whatsapp: '+57 310 7654321', disponibilidad: 'Tue-Sat 9 AM-6 PM', especialidad: 'Singles & doubles strategy', verified: true, sessionsDelivered: 210, tournamentWins: 8, rankInSport: 1, totalCoachesInSport: 5 },
+    { id: 3, nombre: 'Miguel Torres', deporte: 'Basketball', rating: 4.7, totalReviews: 18, precio: '$28/hour', experiencia: '6 years', whatsapp: '+57 315 9876543', disponibilidad: 'Mon-Wed 5-9 PM', especialidad: 'Shooting & defense', verified: false, sessionsDelivered: 67, tournamentWins: 2, rankInSport: 3, totalCoachesInSport: 4 },
+    { id: 4, nombre: 'Laura Gomez', deporte: 'Swimming', rating: 5.0, totalReviews: 12, precio: '$40/hour', experiencia: '12 years', whatsapp: '+57 320 4561237', disponibilidad: 'Daily 6-10 AM', especialidad: 'All strokes & endurance', verified: true, sessionsDelivered: 320, tournamentWins: 12, rankInSport: 1, totalCoachesInSport: 3 },
+    { id: 5, nombre: 'David Silva', deporte: 'Running', rating: 4.6, totalReviews: 15, precio: '$25/hour', experiencia: '5 years', whatsapp: '+57 318 7894561', disponibilidad: 'Mon-Sat 6-9 AM', especialidad: 'Marathon training', verified: false, sessionsDelivered: 45, tournamentWins: 1, rankInSport: 4, totalCoachesInSport: 6 },
   ];
 
   const reviews: Record<number, Review[]> = {
@@ -86,81 +91,87 @@ export function Profesores({ onNavigate, fabTrigger }: ProfesoresProps) {
   };
 
   return (
-    <div className="pb-4 space-y-5">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-br from-primary to-primary/80 text-white px-5 pt-6 pb-8 rounded-b-3xl">
-        <p className="text-sm font-medium text-white/70">Learn from the best 🎓</p>
-        <h1 className="text-2xl font-black font-heading uppercase tracking-tight">Coaches</h1>
-        <p className="text-sm text-white/80 mt-1">Find and hire sports coaches</p>
-      </div>
+    <div className="pb-4 space-y-5 pt-2">
 
       {/* Sport Filter */}
       <div className="px-5">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
           {deportes.map(dep => (
             <button
               key={dep}
               onClick={() => setFilter(dep)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${filter === dep
-                ? 'bg-primary text-white'
-                : 'bg-secondary/60 text-primary border border-secondary hover:bg-secondary'
+              className={`px-4 py-2 rounded-2xl text-[13px] font-bold whitespace-nowrap transition-all shadow-sm ${filter === dep
+                ? 'bg-primary dark:bg-primary text-white scale-105'
+                : 'bg-white dark:bg-gray-800 text-muted-foreground dark:text-gray-400 border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
             >
-              {dep === 'all' ? 'All Sports' : dep}
+              {dep === 'all' ? 'All Coaches' : dep}
             </button>
           ))}
         </div>
       </div>
 
       {/* Coach Cards */}
-      <div className="px-5 space-y-3">
+      <div className="px-5 space-y-4 pt-2">
         {filteredProfesores.map(prof => (
-          <div key={prof.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            {/* Header */}
-            <div className="flex items-start gap-3 mb-3">
-              <div className="w-12 h-12 bg-secondary text-primary rounded-xl flex items-center justify-center flex-shrink-0 text-base font-bold font-heading">
-                {prof.nombre.split(' ').map(n => n[0]).join('')}
+          <div key={prof.id} className="bg-white dark:bg-gray-800 rounded-[28px] p-5 shadow-lg shadow-gray-200/40 dark:shadow-black/20 border border-gray-50 dark:border-gray-700/50">
+            {/* Header Area */}
+            <div className="flex items-start gap-4 mb-4">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-secondary to-secondary/60 dark:from-gray-700 dark:to-gray-600 text-primary dark:text-tertiary rounded-2xl flex items-center justify-center flex-shrink-0 text-xl font-black font-heading shadow-inner">
+                  {prof.nombre.split(' ').map(n => n[0]).join('')}
+                </div>
+                {prof.verified && (
+                  <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center shadow-md">
+                    <SealCheck size={16} weight="fill" className="text-blue-500" />
+                  </div>
+                )}
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold font-heading text-foreground mb-0.5">{prof.nombre}</h3>
-                <div className="flex items-center gap-2 mb-1">
-                  {renderStars(prof.rating)}
-                  <span className="text-xs text-muted-foreground">{prof.rating} ({prof.totalReviews})</span>
+              <div className="flex-1 min-w-0 pt-1">
+                <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                  <h3 className="text-base font-black font-heading text-foreground dark:text-white leading-tight">{prof.nombre}</h3>
+                </div>
+                <p className="text-[13px] font-medium text-tertiary dark:text-tertiary/90 mb-1.5">{prof.deporte} • {prof.precio}</p>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/20 px-1.5 py-0.5 rounded text-amber-600 dark:text-amber-500">
+                    <Star size={12} weight="fill" />
+                    <span className="text-[11px] font-bold">{prof.rating}</span>
+                  </div>
+                  <span className="text-[11px] font-medium text-muted-foreground dark:text-gray-400">{prof.totalReviews} reviews</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Specialties & Info */}
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-3.5 mb-4">
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="flex items-center gap-2">
+                  <Medal size={16} weight="duotone" className="text-tertiary" />
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{prof.experiencia} exp.</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] px-2 py-0.5 bg-secondary text-primary rounded-full font-semibold">{prof.deporte}</span>
-                  <span className="text-xs font-bold text-tertiary">{prof.precio}</span>
+                  <Trophy size={16} weight="duotone" className="text-orange-500" />
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">#{prof.rankInSport} in {prof.deporte}</span>
                 </div>
               </div>
+              <p className="text-xs text-muted-foreground dark:text-gray-400 leading-relaxed border-t border-gray-200 dark:border-gray-700/50 pt-3">
+                <span className="font-semibold text-foreground dark:text-gray-200">Specialty:</span> {prof.especialidad}
+              </p>
             </div>
 
-            {/* Info */}
-            <div className="mb-3 space-y-1">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Medal size={14} weight="duotone" className="text-tertiary" />
-                <span>{prof.experiencia} experience</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <CalendarBlank size={14} weight="duotone" className="text-tertiary" />
-                <span>{prof.disponibilidad}</span>
-              </div>
-            </div>
-
-            {/* Actions */}
+            {/* Action Buttons */}
             <div className="flex gap-2">
               <button
-                onClick={() => handleWhatsApp(prof.whatsapp, prof.nombre)}
-                className="flex-1 px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold flex items-center justify-center gap-1.5 text-foreground hover:bg-gray-50 transition-colors"
+                onClick={() => setSelectedProfesor(prof.id)}
+                className="flex-1 px-4 py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98]"
               >
-                <Phone size={14} weight="bold" />
-                WhatsApp
+                View Profile
               </button>
               <button
-                onClick={() => setSelectedProfesor(prof.id)}
-                className="flex-1 px-3 py-2.5 rounded-xl bg-tertiary text-white text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-tertiary/90 transition-colors"
+                onClick={() => handleWhatsApp(prof.whatsapp, prof.nombre)}
+                className="flex items-center justify-center w-12 h-12 rounded-xl bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-all active:scale-[0.98]"
               >
-                Details
-                <CaretRight size={14} weight="bold" />
+                <Phone size={22} weight="fill" />
               </button>
             </div>
           </div>
@@ -214,6 +225,33 @@ export function Profesores({ onNavigate, fabTrigger }: ProfesoresProps) {
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Specialty</p>
                     <p className="text-sm font-bold text-primary">{prof.especialidad}</p>
                   </div>
+                </div>
+
+                {/* Performance Metrics */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-bold font-heading uppercase mb-2 flex items-center gap-1.5">
+                    <TrendUp size={14} weight="bold" className="text-tertiary" />
+                    Performance
+                  </h4>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="bg-muted rounded-xl p-2.5 text-center">
+                      <p className="text-lg font-bold font-data text-primary">{prof.sessionsDelivered}</p>
+                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Sessions</p>
+                    </div>
+                    <div className="bg-muted rounded-xl p-2.5 text-center">
+                      <p className="text-lg font-bold font-data text-primary">{prof.tournamentWins}</p>
+                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Wins</p>
+                    </div>
+                    <div className="bg-muted rounded-xl p-2.5 text-center">
+                      <p className="text-lg font-bold font-data text-primary">#{prof.rankInSport}</p>
+                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Rank</p>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1">
+                    <Trophy size={12} weight="duotone" className="text-tertiary" />
+                    Ranked #{prof.rankInSport} of {prof.totalCoachesInSport} {prof.deporte} coaches
+                    {prof.verified && ' • Verified Athlete'}
+                  </p>
                 </div>
 
                 {/* Reviews */}

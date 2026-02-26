@@ -95,39 +95,11 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
 
     return (
         <div className="pb-28 space-y-5">
-            {/* Hero Header */}
-            <div className="bg-gradient-to-br from-primary via-primary/90 to-tertiary text-white px-5 pt-6 pb-8 rounded-b-3xl relative overflow-hidden">
-                {/* Background decoration */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-
-                <div className="relative z-10">
-                    <div className="flex items-center gap-2 mb-1">
-                        <GameController size={22} weight="fill" className="text-secondary" />
-                        <p className="text-sm font-medium text-white/70">Ready to play? 🎮</p>
-                    </div>
-                    <h1 className="text-2xl font-black font-heading uppercase tracking-tight">
-                        Find a Match
-                    </h1>
-                    <p className="text-sm text-white/80 mt-1">Connect with players, pick your sport & go!</p>
-
-                    {/* Quick stats */}
-                    <div className="flex gap-3 mt-5">
-                        <div className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-xl px-4 py-2.5 flex-1">
-                            <Lightning size={18} weight="fill" className="text-amber-300" />
-                            <div>
-                                <p className="text-[10px] uppercase tracking-wider text-white/60 font-medium">Active Now</p>
-                                <p className="text-sm font-bold font-data">24 players</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-xl px-4 py-2.5 flex-1">
-                            <Trophy size={18} weight="fill" className="text-amber-300" />
-                            <div>
-                                <p className="text-[10px] uppercase tracking-wider text-white/60 font-medium">Open Matches</p>
-                                <p className="text-sm font-bold font-data">{mockMatches.length} nearby</p>
-                            </div>
-                        </div>
-                    </div>
+            {/* Stats Section */}
+            <div className="px-5 pt-2">
+                <div className="flex gap-3">
+                    <StatPill icon={Lightning} label="Active Now" value="24 PLAYERS" iconColor="text-amber-500" iconBg="bg-amber-50" />
+                    <StatPill icon={Trophy} label="Open Matches" value={`${mockMatches.length} NEARBY`} iconColor="text-tertiary" iconBg="bg-tertiary/10" />
                 </div>
             </div>
 
@@ -135,34 +107,34 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
             {isSearching ? (
                 /* Searching animation */
                 <div className="px-5">
-                    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center space-y-5">
-                        <div className="w-20 h-20 bg-secondary text-primary rounded-full flex items-center justify-center mx-auto animate-pulse">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700 text-center space-y-5 transition-colors">
+                        <div className="w-20 h-20 bg-secondary dark:bg-gray-700 text-primary dark:text-tertiary rounded-full flex items-center justify-center mx-auto animate-pulse">
                             <MagnifyingGlass size={36} weight="duotone" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black font-heading uppercase tracking-tight text-foreground">Searching...</h2>
-                            <p className="text-xs text-muted-foreground mt-1">
+                            <h2 className="text-lg font-black font-heading uppercase tracking-tight text-foreground dark:text-white">Searching...</h2>
+                            <p className="text-xs text-muted-foreground dark:text-gray-400 mt-1">
                                 Finding {selectedSport ? sports.find(s => s.id === selectedSport)?.label : ''} matches near you
                             </p>
                         </div>
                         <div className="w-full max-w-[200px] mx-auto">
-                            <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="w-full h-2.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                                 <div className="h-full bg-tertiary rounded-full transition-all duration-300" style={{ width: `${Math.min(searchProgress, 100)}%` }} />
                             </div>
-                            <p className="text-xs text-muted-foreground mt-2">{Math.min(Math.round(searchProgress), 100)}%</p>
+                            <p className="text-xs text-muted-foreground dark:text-gray-400 mt-2">{Math.min(Math.round(searchProgress), 100)}%</p>
                         </div>
                         <div className="space-y-2 text-left max-w-[240px] mx-auto">
-                            <div className={`flex items-center gap-2 text-xs ${searchProgress > 20 ? 'text-tertiary' : 'text-gray-300'} transition-colors`}>
+                            <div className={`flex items-center gap-2 text-xs ${searchProgress > 20 ? 'text-tertiary dark:text-tertiary/90' : 'text-gray-300 dark:text-gray-600'} transition-colors`}>
                                 <CheckCircle size={14} weight={searchProgress > 20 ? 'fill' : 'regular'} />
-                                <span>Scanning nearby players...</span>
+                                <span className={searchProgress > 20 ? 'text-foreground dark:text-gray-300' : 'text-muted-foreground dark:text-gray-500'}>Scanning nearby players...</span>
                             </div>
-                            <div className={`flex items-center gap-2 text-xs ${searchProgress > 50 ? 'text-tertiary' : 'text-gray-300'} transition-colors`}>
+                            <div className={`flex items-center gap-2 text-xs ${searchProgress > 50 ? 'text-tertiary dark:text-tertiary/90' : 'text-gray-300 dark:text-gray-600'} transition-colors`}>
                                 <CheckCircle size={14} weight={searchProgress > 50 ? 'fill' : 'regular'} />
-                                <span>Matching preferences...</span>
+                                <span className={searchProgress > 50 ? 'text-foreground dark:text-gray-300' : 'text-muted-foreground dark:text-gray-500'}>Matching preferences...</span>
                             </div>
-                            <div className={`flex items-center gap-2 text-xs ${searchProgress > 80 ? 'text-tertiary' : 'text-gray-300'} transition-colors`}>
+                            <div className={`flex items-center gap-2 text-xs ${searchProgress > 80 ? 'text-tertiary dark:text-tertiary/90' : 'text-gray-300 dark:text-gray-600'} transition-colors`}>
                                 <CheckCircle size={14} weight={searchProgress > 80 ? 'fill' : 'regular'} />
-                                <span>Finding open matches...</span>
+                                <span className={searchProgress > 80 ? 'text-foreground dark:text-gray-300' : 'text-muted-foreground dark:text-gray-500'}>Finding open matches...</span>
                             </div>
                         </div>
                     </div>
@@ -172,8 +144,8 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                 <div className="px-5 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-base font-bold font-heading text-foreground uppercase tracking-tight">Matches Found</h2>
-                            <p className="text-xs text-muted-foreground">{filteredMatches.length} available matches</p>
+                            <h2 className="text-base font-bold font-heading text-foreground dark:text-white uppercase tracking-tight">Matches Found</h2>
+                            <p className="text-xs text-muted-foreground dark:text-gray-400">{filteredMatches.length} available matches</p>
                         </div>
                         <button
                             onClick={handleReset}
@@ -201,7 +173,7 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                     {/* Match cards */}
                     <div className="space-y-3">
                         {filteredMatches.map(match => (
-                            <div key={match.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 active:scale-[0.98] transition-all">
+                            <div key={match.id} className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 active:scale-[0.98] transition-all">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className={`w-11 h-11 ${sports.find(s => s.id === match.sport)?.color || 'bg-gray-500'} text-white rounded-xl flex items-center justify-center flex-shrink-0`}>
                                         {(() => {
@@ -210,20 +182,20 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                                         })()}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-bold font-heading text-foreground truncate">{match.title}</p>
-                                        <p className="text-xs text-muted-foreground">{match.modality} • {match.level}</p>
+                                        <p className="text-sm font-bold font-heading text-foreground dark:text-white truncate">{match.title}</p>
+                                        <p className="text-xs text-muted-foreground dark:text-gray-400">{match.modality} • {match.level}</p>
                                     </div>
-                                    <div className="bg-secondary/60 text-primary px-2.5 py-1 rounded-full flex-shrink-0">
+                                    <div className="bg-secondary/60 dark:bg-gray-700 text-primary dark:text-gray-200 px-2.5 py-1 rounded-full flex-shrink-0">
                                         <span className="text-xs font-bold font-data">{match.players}</span>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+                                <div className="flex items-center gap-4 text-xs text-muted-foreground dark:text-gray-400 mb-3">
                                     <span className="flex items-center gap-1">
-                                        <Clock size={12} weight="bold" className="text-tertiary" />
+                                        <Clock size={12} weight="bold" className="text-tertiary dark:text-tertiary/90" />
                                         {match.time}
                                     </span>
                                     <span className="flex items-center gap-1">
-                                        <MapPin size={12} weight="bold" className="text-tertiary" />
+                                        <MapPin size={12} weight="bold" className="text-tertiary dark:text-tertiary/90" />
                                         {match.location}
                                     </span>
                                 </div>
@@ -240,7 +212,7 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                 <div className="px-5 space-y-5">
                     {/* Step 1: Sport Selection */}
                     <div>
-                        <h2 className="text-base font-bold font-heading text-foreground uppercase tracking-tight mb-3">
+                        <h2 className="text-base font-bold font-heading text-foreground dark:text-white uppercase tracking-tight mb-3">
                             {selectedSport ? '1. Sport ✓' : '1. Choose your sport'}
                         </h2>
                         <div className="grid grid-cols-3 gap-3">
@@ -255,14 +227,14 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                                             if (isSelected) setSelectedModality(null);
                                         }}
                                         className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all active:scale-95 ${isSelected
-                                            ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
-                                            : 'bg-white border-gray-100 shadow-sm hover:shadow-md'
+                                            ? 'bg-primary dark:bg-primary text-white border-primary dark:border-primary shadow-md shadow-primary/20'
+                                            : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md'
                                             }`}
                                     >
                                         <div className={`w-12 h-12 ${isSelected ? 'bg-white/20' : sport.color} ${isSelected ? 'text-white' : 'text-white'} rounded-2xl flex items-center justify-center`}>
                                             <Icon size={24} weight="fill" />
                                         </div>
-                                        <span className={`text-[11px] font-bold ${isSelected ? 'text-white' : 'text-foreground'}`}>{sport.label}</span>
+                                        <span className={`text-[11px] font-bold ${isSelected ? 'text-white' : 'text-foreground dark:text-gray-200'}`}>{sport.label}</span>
                                     </button>
                                 );
                             })}
@@ -272,7 +244,7 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                     {/* Step 2: Modality Selection (appears after sport is selected) */}
                     {selectedSport && (
                         <div className="animate-fadeIn">
-                            <h2 className="text-base font-bold font-heading text-foreground uppercase tracking-tight mb-3">
+                            <h2 className="text-base font-bold font-heading text-foreground dark:text-white uppercase tracking-tight mb-3">
                                 {selectedModality ? '2. Mode ✓' : '2. Choose mode'}
                             </h2>
                             <div className="grid grid-cols-2 gap-3">
@@ -285,15 +257,15 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                                             onClick={() => setSelectedModality(isSelected ? null : mod.id)}
                                             className={`flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all active:scale-[0.97] ${isSelected
                                                 ? 'bg-tertiary text-white border-tertiary shadow-md shadow-tertiary/20'
-                                                : 'bg-white border-gray-100 shadow-sm hover:shadow-md'
+                                                : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md'
                                                 }`}
                                         >
-                                            <div className={`w-10 h-10 ${isSelected ? 'bg-white/20' : 'bg-secondary'} ${isSelected ? 'text-white' : 'text-primary'} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                                            <div className={`w-10 h-10 ${isSelected ? 'bg-white/20' : 'bg-secondary dark:bg-gray-700'} ${isSelected ? 'text-white' : 'text-primary dark:text-tertiary'} rounded-xl flex items-center justify-center flex-shrink-0`}>
                                                 <Icon size={20} weight={isSelected ? "fill" : "duotone"} />
                                             </div>
                                             <div className="min-w-0">
-                                                <p className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-foreground'}`}>{mod.label}</p>
-                                                <p className={`text-[10px] ${isSelected ? 'text-white/70' : 'text-muted-foreground'}`}>{mod.desc}</p>
+                                                <p className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-foreground dark:text-gray-200'}`}>{mod.label}</p>
+                                                <p className={`text-[10px] ${isSelected ? 'text-white/70' : 'text-muted-foreground dark:text-gray-400'}`}>{mod.desc}</p>
                                             </div>
                                         </button>
                                     );
@@ -325,12 +297,12 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                     {/* Available Matches Preview */}
                     <div>
                         <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-base font-bold font-heading text-foreground uppercase tracking-tight">Open Matches</h2>
+                            <h2 className="text-base font-bold font-heading text-foreground dark:text-white uppercase tracking-tight">Open Matches</h2>
                             <span className="text-[10px] font-semibold text-tertiary bg-secondary/60 px-2.5 py-1 rounded-full">{mockMatches.length} available</span>
                         </div>
                         <div className="space-y-3">
                             {mockMatches.slice(0, 3).map(match => (
-                                <div key={match.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-3">
+                                <div key={match.id} className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-3">
                                     <div className={`w-10 h-10 ${sports.find(s => s.id === match.sport)?.color || 'bg-gray-500'} text-white rounded-xl flex items-center justify-center flex-shrink-0`}>
                                         {(() => {
                                             const SportIcon = sports.find(s => s.id === match.sport)?.icon || SoccerBall;
@@ -338,10 +310,10 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                                         })()}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-bold font-heading text-foreground truncate">{match.title}</p>
-                                        <p className="text-xs text-muted-foreground mt-0.5">{match.time} • {match.players}</p>
+                                        <p className="text-sm font-bold font-heading text-foreground dark:text-white truncate">{match.title}</p>
+                                        <p className="text-xs text-muted-foreground dark:text-gray-400 mt-0.5">{match.time} • {match.players}</p>
                                     </div>
-                                    <div className="w-7 h-7 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary flex-shrink-0">
+                                    <div className="w-7 h-7 rounded-full bg-tertiary/10 dark:bg-gray-700 flex items-center justify-center text-tertiary dark:text-gray-300 flex-shrink-0">
                                         <CaretRight size={14} weight="bold" />
                                     </div>
                                 </div>
@@ -363,6 +335,21 @@ export function Play({ onNavigate, fabTrigger }: PlayProps) {
                 }
                 initialSportName={selectedSport ? sports.find(s => s.id === selectedSport)?.label : undefined}
             />
+        </div>
+    );
+}
+
+// Reusing the same StatPill from Home for consistency
+function StatPill({ icon: Icon, label, value, iconColor = "text-primary dark:text-gray-100", iconBg = "bg-primary/10 dark:bg-gray-800" }: any) {
+    return (
+        <div className="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md active:scale-[0.98] transition-all">
+            <div className="flex items-center gap-2 mb-1">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center ${iconBg} ${iconColor}`}>
+                    <Icon size={14} weight="fill" />
+                </div>
+                <p className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground dark:text-gray-400">{label}</p>
+            </div>
+            <p className="text-2xl font-black font-data tracking-wide text-foreground dark:text-white mt-1">{value}</p>
         </div>
     );
 }
