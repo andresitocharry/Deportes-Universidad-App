@@ -155,13 +155,13 @@ export function Home({ onNavigate, fabTrigger, diceTrigger }: HomeProps) {
 
       {/* Quick Activity Modal / Sorpréndeme */}
       {showDice && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-5">
-          <div className="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-[320px] p-6 shadow-2xl relative overflow-hidden animate-[scaleIn_0.2s_ease-out]">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-5" onClick={() => setShowDice(false)}>
+          <div className="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-[320px] p-6 shadow-2xl relative overflow-hidden animate-[scaleIn_0.2s_ease-out]" onClick={(e) => e.stopPropagation()}>
             {/* Decorative background */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-tertiary/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
-            <button onClick={() => setShowDice(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors z-10 outline-none">
+            <button onClick={() => setShowDice(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors z-[60] cursor-pointer outline-none">
               <X size={16} weight="bold" />
             </button>
 
