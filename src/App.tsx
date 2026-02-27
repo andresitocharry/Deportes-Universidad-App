@@ -10,10 +10,10 @@ import { HistorialPartidos } from './components/HistorialPartidos';
 import { PerfilUsuario } from './components/PerfilUsuario';
 import { Torneos } from './components/Torneos';
 import {
-  House, Trophy, PersonSimpleRun, UsersThree, Student, Plus,
+  House, Trophy, PersonSimpleRun, UsersThree, Student, Plus, X,
   Bell, MagnifyingGlass, UserCircle, Sliders, CalendarBlank,
   SoccerBall, Basketball, TennisBall, Barbell, Handshake, Target, GameController,
-  Moon, Sun
+  Moon, Sun, DiceFive, Link, CalendarPlus
 } from '@phosphor-icons/react';
 
 type Screen = 'home' | 'retos' | 'play' | 'clima' | 'comunidades' | 'strava' | 'historial' | 'profesores' | 'perfil' | 'torneos';
@@ -26,6 +26,8 @@ const playIcons = [PersonSimpleRun, SoccerBall, Basketball, Handshake, TennisBal
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [fabTrigger, setFabTrigger] = useState(0);
+  const [diceTrigger, setDiceTrigger] = useState(0);
+  const [isFabExpanded, setIsFabExpanded] = useState(false);
   const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [playIconIndex, setPlayIconIndex] = useState(0);
@@ -52,6 +54,7 @@ export default function App() {
 
   const navigateWithAnimation = useCallback((target: Screen, direction?: 'left' | 'right') => {
     if (isAnimating) return;
+    setIsFabExpanded(false);
 
     // Auto-detect direction if not provided
     if (!direction) {
@@ -125,7 +128,7 @@ export default function App() {
   const renderScreen = () => {
     switch (currentScreen) {
       case 'home':
-        return <Home onNavigate={navigate} fabTrigger={fabTrigger} />;
+        return <Home onNavigate={navigate} fabTrigger={fabTrigger} diceTrigger={diceTrigger} />;
       case 'retos':
         return <RetosComunidad onNavigate={navigate} fabTrigger={fabTrigger} />;
       case 'play':
@@ -286,14 +289,61 @@ export default function App() {
           {renderScreen()}
         </div>
 
+        {/* FAB Overlay */}
+        {isFabExpanded && currentScreen === 'home' && (
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity"
+            onClick={() => setIsFabExpanded(false)}
+          />
+        )}
+
         {/* FAB — Android Material Design Style (hidden on Play and Perfil tabs) */}
         {currentScreen !== 'play' && currentScreen !== 'perfil' && (
-          <button
-            className={`absolute right-6 w-14 h-14 bg-tertiary text-white rounded-full shadow-lg shadow-tertiary/40 flex items-center justify-center hover:bg-tertiary/90 active:scale-95 transition-all duration-300 z-50 ${isFabVisible ? 'bottom-24 opacity-100 translate-y-0' : 'bottom-10 opacity-0 translate-y-20 pointer-events-none'}`}
-            onClick={() => setFabTrigger(t => t + 1)}
-          >
-            <Plus size={28} weight="bold" />
-          </button>
+          <div className={`absolute right-6 flex flex-col items-end gap-3 z-50 transition-all duration-300 ${isFabVisible || isFabExpanded ? 'bottom-24 opacity-100 translate-y-0' : 'bottom-10 opacity-0 translate-y-20 pointer-events-none'}`}>
+
+            {/* Speed Dial Options for Home */}
+            {currentScreen === 'home' && isFabExpanded && (
+              <div className="flex flex-col items-end gap-3 mb-2">
+                <button onClick={() => { setIsFabExpanded(false); setDiceTrigger(t => t + 1); }} className="flex items-center gap-3 active:scale-95 transition-all outline-none">
+                  <span className={`px-3 py-1.5 rounded-lg text-[11px] uppercase tracking-wider font-bold shadow-md ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-tertiary'}`}>Sorpréndeme</span>
+                  <div className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-tertiary'}`}>
+                    <DiceFive size={22} weight="fill" />
+                  </div>
+                </button>
+                <button onClick={() => { setIsFabExpanded(false); navigate('strava'); }} className="flex items-center gap-3 active:scale-95 transition-all outline-none">
+                  <span className={`px-3 py-1.5 rounded-lg text-[11px] uppercase tracking-wider font-bold shadow-md ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-tertiary'}`}>Conectar Dispositivos</span>
+                  <div className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-tertiary'}`}>
+                    <Link size={20} weight="bold" />
+                  </div>
+                </button>
+                <button onClick={() => { setIsFabExpanded(false); setFabTrigger(t => t + 1); }} className="flex items-center gap-3 active:scale-95 transition-all outline-none">
+                  <span className={`px-3 py-1.5 rounded-lg text-[11px] uppercase tracking-wider font-bold shadow-md ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-tertiary'}`}>Agendar Partido</span>
+                  <div className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-tertiary'}`}>
+                    <CalendarPlus size={20} weight="bold" />
+                  </div>
+                </button>
+              </div>
+            )}
+
+            <button
+              className={`w-14 h-14 bg-tertiary text-white rounded-full shadow-lg shadow-tertiary/40 flex items-center justify-center hover:bg-tertiary/90 active:scale-95 transition-all duration-300 outline-none`}
+              onClick={() => {
+                if (currentScreen === 'home') {
+                  setIsFabExpanded(!isFabExpanded);
+                } else {
+                  setFabTrigger(t => t + 1);
+                }
+              }}
+            >
+              <div className={`transition-transform duration-300 ${isFabExpanded && currentScreen === 'home' ? 'rotate-135' : ''}`}>
+                {isFabExpanded && currentScreen === 'home' ? (
+                  <X size={24} weight="bold" />
+                ) : (
+                  <Plus size={28} weight="bold" />
+                )}
+              </div>
+            </button>
+          </div>
         )}
 
         {/* Bottom Navigation Bar */}

@@ -2,21 +2,31 @@ import { useState, useEffect } from 'react';
 import {
   Trophy, Clock, UsersThree, CloudSun, Pulse, CalendarBlank, CaretRight,
   Fire, TrendUp, Lightning, PersonSimpleRun, Barbell, SoccerBall,
-  UserCircle, Timer, MapPin
+  UserCircle, Timer, MapPin, DiceFive, X
 } from '@phosphor-icons/react';
 import { AgendarPartido } from './AgendarPartido';
 
 interface HomeProps {
   onNavigate: (screen: string) => void;
   fabTrigger?: number;
+  diceTrigger?: number;
 }
 
-export function Home({ onNavigate, fabTrigger }: HomeProps) {
+export function Home({ onNavigate, fabTrigger, diceTrigger }: HomeProps) {
   const [showAgendar, setShowAgendar] = useState(false);
+  const [showDice, setShowDice] = useState(false);
+  const [randomAct, setRandomAct] = useState(0);
 
   useEffect(() => {
     if (fabTrigger && fabTrigger > 0) setShowAgendar(true);
   }, [fabTrigger]);
+
+  useEffect(() => {
+    if (diceTrigger && diceTrigger > 0) {
+      setRandomAct(Math.floor(Math.random() * 3));
+      setShowDice(true);
+    }
+  }, [diceTrigger]);
 
   return (
     <>
@@ -142,6 +152,68 @@ export function Home({ onNavigate, fabTrigger }: HomeProps) {
 
       {/* Match Scheduling Wizard */}
       <AgendarPartido open={showAgendar} onClose={() => setShowAgendar(false)} />
+
+      {/* Quick Activity Modal / Sorpréndeme */}
+      {showDice && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-[320px] p-6 shadow-2xl relative overflow-hidden animate-[scaleIn_0.2s_ease-out]">
+            {/* Decorative background */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-tertiary/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+
+            <button onClick={() => setShowDice(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors z-10 outline-none">
+              <X size={16} weight="bold" />
+            </button>
+
+            <div className="text-center relative z-10 pt-2 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-tertiary to-teal-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-tertiary/30">
+                <DiceFive size={36} weight="fill" />
+              </div>
+              <h3 className="text-xl font-black font-heading tracking-tight dark:text-white uppercase mb-1">Tu Actividad</h3>
+              <p className="text-xs font-medium text-muted-foreground dark:text-gray-400">Recomendación instantánea</p>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-800/80 rounded-2xl p-4 mb-6 border border-gray-100 dark:border-gray-700 relative z-10">
+              {randomAct === 0 && (
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-3">
+                    <PersonSimpleRun size={28} weight="duotone" />
+                  </div>
+                  <h4 className="text-base font-bold dark:text-white">30-min Interval Run</h4>
+                  <p className="text-xs text-muted-foreground mt-1">Campus Track • Matches your goals</p>
+                </div>
+              )}
+              {randomAct === 1 && (
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-3">
+                    <Barbell size={28} weight="duotone" />
+                  </div>
+                  <h4 className="text-base font-bold dark:text-white">Calisthenics Challenge</h4>
+                  <p className="text-xs text-muted-foreground mt-1">12 participants today • Trending</p>
+                </div>
+              )}
+              {randomAct === 2 && (
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-3">
+                    <SoccerBall size={28} weight="duotone" />
+                  </div>
+                  <h4 className="text-base font-bold dark:text-white">5v5 Soccer</h4>
+                  <p className="text-xs text-muted-foreground mt-1">La Caneca • Starts in 10 mins! 🏃</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2 relative z-10">
+              <button onClick={() => setRandomAct(Math.floor(Math.random() * 3))} className="flex-1 py-3 rounded-xl border-2 border-tertiary text-tertiary font-bold text-sm hover:bg-tertiary/5 transition-all outline-none">
+                Tirar Dado
+              </button>
+              <button onClick={() => { setShowDice(false); onNavigate('play'); }} className="flex-1 py-3 rounded-xl bg-tertiary text-white font-bold text-sm shadow-md shadow-tertiary/30 hover:bg-tertiary/90 transition-all outline-none">
+                ¡Vamos!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
